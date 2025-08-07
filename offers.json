@@ -29,7 +29,7 @@
     { "nation": "ISHR",         "offer": { "amount": 12, "good": "Emeralds" }, "want": { "amount": 24, "good": "Iron" } },
     { "nation": "ISHR",         "offer": { "amount": 32, "good": "Bamboo" },   "want": { "amount": 3, "good": "Iron" } },
 
-    { "nation": "FrostBat",     "offer": { "amount": 20, "good": "Diamonds" }, "want": { "amount": 180, "good": "Iron" } },
+    { "nation": "FrostBat",     "offer": { "amount": 20, "good": "Diamond" }, "want": { "amount": 180, "good": "Iron" } },
     { "nation": "FrostBat",     "offer": { "amount": 15, "good": "Snowballs" }, "want": { "amount": 1, "good": "Iron" } }
   ]
 }
