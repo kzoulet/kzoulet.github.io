@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Minecraft Nations Stock Exchange</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #15171b;
+      --fg: #e9eaea;
+      --accent: #60d394;
+      --card: #23272f;
+      --border: #282c34;
+      --muted: #888;
+    }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      margin: 24px 0 8px 0;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      color: var(--accent);
+    }
+    .avg-prices {
+      margin: 0 auto 32px auto;
+      max-width: 700px;
+      background: var(--card);
+      border-radius: 10px;
+      padding: 18px 32px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+    }
+    .avg-item {
+      font-size: 1.06rem;
+      color: var(--fg);
+      background: #191b21;
+      border-radius: 6px;
+      padding: 7px 14px;
+      border: 1px solid #23272f;
+      margin: 4px;
+      min-width: 120px;
+      text-align: center;
+    }
+    .nation-section {
+      margin: 0 auto 28px auto;
+      max-width: 700px;
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px 24px 10px 24px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 12px #0004;
+    }
+    .nation-title {
+      color: var(--accent);
+      font-size: 1.17rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+    .offer-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 6px;
+    }
+    .offer-table th, .offer-table td {
+      border: 0;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 0.98rem;
+    }
+    .offer-table th {
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .offer-table tr {
+      background: none;
+      border-bottom: 1px solid #23272f;
+    }
+    .offer-table tr:last-child {
+      border-bottom: 0;
+    }
+    @media (max-width: 650px) {
+      .avg-prices, .nation-section {
+        padding: 10px;
+        max-width: 97vw;
+      }
+      .avg-item { min-width: 90px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Minecraft Nations Stock Exchange</h1>
+  <div id="avg-prices" class="avg-prices"></div>
+  <div id="offers"></div>
+
+  <script>
+    // Load offers.json via fetch
+    fetch('offers.json')
+      .then(response => response.json())
+      .then(data => {
+        const offers = data.offers;
+
+        // Collect goods for averages
+        function collectGoods(offers) {
+          const goods = {};
+          offers.forEach(({offer, want}) => {
+            if (!goods[offer.good]) goods[offer.good] = [];
+            goods[offer.good].push({ offer, want });
+          });
+          return goods;
+        }
+
+        // Calculate average price of 1 unit of each good (in Iron if possible)
+        function calcAverages(goods) {
+          const avgs = {};
+          Object.entries(goods).forEach(([good, arr]) => {
+            let prices = arr
+              .filter(x => x.want.good.toLowerCase() === 'iron')
+              .map(x => x.want.amount / x.offer.amount);
+            if (prices.length === 0) {
+              prices = arr.map(x => x.want.amount / x.offer.amount);
+            }
+            avgs[good] = (prices.reduce((a,b) => a+b,0) / prices.length).toFixed(2);
+          });
+          return avgs;
+        }
+
+        // Render average prices
+        function renderAverages(avgs) {
+          const el = document.getElementById('avg-prices');
+          el.innerHTML = Object.entries(avgs).map(
+            ([good, avg]) => `<div class="avg-item"><b>${good}</b><br><span style="color:var(--muted);font-size:0.92em">~ ${avg} per 1</span></div>`
+          ).join('');
+        }
+
+        // Render nations (sorted alphabetically)
+        function renderOffersByNation(offers) {
+          // Group by nation
+          const nations = {};
+          offers.forEach(o => {
+            if (!nations[o.nation]) nations[o.nation] = [];
+            nations[o.nation].push(o);
+          });
+          // Sort nation names
+          const sortedNationNames = Object.keys(nations).sort((a, b) => a.localeCompare(b));
+          const container = document.getElementById('offers');
+          container.innerHTML = '';
+          sortedNationNames.forEach(nation => {
+            const nationOffers = nations[nation];
+            const sec = document.createElement('div');
+            sec.className = 'nation-section';
+            sec.innerHTML = `<div class="nation-title">${nation}</div>
+              <table class="offer-table">
+                <thead><tr><th>Offer</th><th>Wants</th></tr></thead>
+                <tbody>
+                ${
+                  nationOffers.map(o =>
+                    `<tr>
+                      <td>${o.offer.amount} ${o.offer.good}</td>
+                      <td>${o.want.amount} ${o.want.good}</td>
+                    </tr>`
+                  ).join('')
+                }
+                </tbody>
+              </table>
+            `;
+            container.appendChild(sec);
+          });
+        }
+
+        // MAIN
+        const goods = collectGoods(offers);
+        const avgs = calcAverages(goods);
+        renderAverages(avgs);
+        renderOffersByNation(offers);
+      })
+      .catch(err => {
+        document.getElementById('avg-prices').innerHTML = '<span style="color:#f44">Error loading data.</span>';
+      });
+  </script>
+</body>
+</html>
