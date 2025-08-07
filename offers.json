@@ -4,7 +4,7 @@
     { "nation": "NEIPA",        "offer": { "amount": 15, "good": "Steak" },    "want": { "amount": 8, "good": "Iron" } },
     { "nation": "NEIPA",        "offer": { "amount": 10, "good": "Honey" },    "want": { "amount": 4, "good": "Iron" } },
 
-    { "nation": "IronFang",     "offer": { "amount": 2, "good": "Diamonds" },  "want": { "amount": 64, "good": "Iron" } },
+    { "nation": "IronFang",     "offer": { "amount": 2, "good": "Diamond" },  "want": { "amount": 64, "good": "Iron" } },
     { "nation": "IronFang",     "offer": { "amount": 50, "good": "Wheat" },    "want": { "amount": 12, "good": "Iron" } },
 
     { "nation": "Moss Monk",    "offer": { "amount": 64, "good": "Steak" },    "want": { "amount": 12, "good": "Iron" } },
