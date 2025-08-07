@@ -1,15 +1,35 @@
 {
   "offers": [
-    { "nation": "NEIPA", "offer": { "amount": 30, "good": "Wheat" }, "want": { "amount": 5, "good": "Iron" } },
-    { "nation": "IronFang", "offer": { "amount": 2, "good": "Diamonds" }, "want": { "amount": 64, "good": "Iron" } },
-    { "nation": "Moss Monk", "offer": { "amount": 64, "good": "Wheat" }, "want": { "amount": 12, "good": "Iron" } },
-    { "nation": "Zarapicoo", "offer": { "amount": 10, "good": "Emeralds" }, "want": { "amount": 15, "good": "Iron" } },
-    { "nation": "Elden Empire", "offer": { "amount": 32, "good": "Wheat" }, "want": { "amount": 3, "good": "Iron" } },
-    { "nation": "PAX IMPERII", "offer": { "amount": 1, "good": "Diamond" }, "want": { "amount": 28, "good": "Iron" } },
-    { "nation": "DAWG", "offer": { "amount": 64, "good": "Iron" }, "want": { "amount": 1, "good": "Diamond" } },
-    { "nation": "Bugambilia", "offer": { "amount": 40, "good": "Wheat" }, "want": { "amount": 7, "good": "Iron" } },
-    { "nation": "Comrades", "offer": { "amount": 24, "good": "Wheat" }, "want": { "amount": 4, "good": "Iron" } },
-    { "nation": "ISHR", "offer": { "amount": 12, "good": "Emeralds" }, "want": { "amount": 24, "good": "Iron" } },
-    { "nation": "FrostBat", "offer": { "amount": 20, "good": "Diamonds" }, "want": { "amount": 180, "good": "Iron" } }
+    { "nation": "NEIPA",        "offer": { "amount": 30, "good": "Wheat" },    "want": { "amount": 5, "good": "Iron" } },
+    { "nation": "NEIPA",        "offer": { "amount": 15, "good": "Steak" },    "want": { "amount": 8, "good": "Iron" } },
+    { "nation": "NEIPA",        "offer": { "amount": 10, "good": "Honey" },    "want": { "amount": 4, "good": "Iron" } },
+
+    { "nation": "IronFang",     "offer": { "amount": 2, "good": "Diamonds" },  "want": { "amount": 64, "good": "Iron" } },
+    { "nation": "IronFang",     "offer": { "amount": 50, "good": "Wheat" },    "want": { "amount": 12, "good": "Iron" } },
+
+    { "nation": "Moss Monk",    "offer": { "amount": 64, "good": "Steak" },    "want": { "amount": 12, "good": "Iron" } },
+    { "nation": "Moss Monk",    "offer": { "amount": 32, "good": "Carrots" },  "want": { "amount": 6, "good": "Iron" } },
+
+    { "nation": "Zarapicoo",    "offer": { "amount": 10, "good": "Arrows" },   "want": { "amount": 15, "good": "Iron" } },
+    { "nation": "Zarapicoo",    "offer": { "amount": 25, "good": "Wheat" },    "want": { "amount": 5, "good": "Iron" } },
+
+    { "nation": "Elden Empire", "offer": { "amount": 32, "good": "Wheat" },    "want": { "amount": 3, "good": "Iron" } },
+    { "nation": "Elden Empire", "offer": { "amount": 10, "good": "Emeralds" }, "want": { "amount": 20, "good": "Iron" } },
+
+    { "nation": "PAX IMPERII",  "offer": { "amount": 1, "good": "Diamond" },   "want": { "amount": 28, "good": "Iron" } },
+
+    { "nation": "DAWG",         "offer": { "amount": 64, "good": "Chicken" },  "want": { "amount": 1, "good": "Iron" } },
+    { "nation": "DAWG",         "offer": { "amount": 24, "good": "Eggs" },     "want": { "amount": 4, "good": "Iron" } },
+
+    { "nation": "Bugambilia",   "offer": { "amount": 40, "good": "Wheat" },    "want": { "amount": 7, "good": "Iron" } },
+    { "nation": "Bugambilia",   "offer": { "amount": 16, "good": "Cactus" },   "want": { "amount": 2, "good": "Iron" } },
+
+    { "nation": "Comrades",     "offer": { "amount": 24, "good": "Wheat" },    "want": { "amount": 4, "good": "Iron" } },
+
+    { "nation": "ISHR",         "offer": { "amount": 12, "good": "Emeralds" }, "want": { "amount": 24, "good": "Iron" } },
+    { "nation": "ISHR",         "offer": { "amount": 32, "good": "Bamboo" },   "want": { "amount": 3, "good": "Iron" } },
+
+    { "nation": "FrostBat",     "offer": { "amount": 20, "good": "Diamonds" }, "want": { "amount": 180, "good": "Iron" } },
+    { "nation": "FrostBat",     "offer": { "amount": 15, "good": "Snowballs" }, "want": { "amount": 1, "good": "Iron" } }
   ]
 }

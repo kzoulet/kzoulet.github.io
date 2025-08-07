@@ -88,6 +88,12 @@
     .offer-table tr:last-child {
       border-bottom: 0;
     }
+    .nation-good-avg {
+      color: var(--accent);
+      font-size: 0.97rem;
+      margin: 6px 0 2px 0;
+      display: inline-block;
+    }
     @media (max-width: 650px) {
       .avg-prices, .nation-section {
         padding: 10px;
@@ -103,35 +109,45 @@
   <div id="offers"></div>
 
   <script>
-    // Utility: Only keep offers where "want.good" is "Iron"
+    // Only use offers where Iron is the payment good
     function filterIronOnly(offers) {
       return offers.filter(o => o.want.good.toLowerCase() === "iron");
     }
 
-    // Collect goods for averages
-    function collectGoods(offers) {
-      const goods = {};
+    // Calculate global averages: "how many GOOD per 1 Iron"
+    function calcGlobalAverages(offers) {
+      const byGood = {};
       offers.forEach(({offer, want}) => {
-        if (!goods[offer.good]) goods[offer.good] = [];
-        goods[offer.good].push({ offer, want });
+        if (!byGood[offer.good]) byGood[offer.good] = [];
+        byGood[offer.good].push(offer.amount / want.amount);
       });
-      return goods;
-    }
-
-    // Calculate average: "how many of each good per 1 Iron"
-    function calcAverages(goods) {
       const avgs = {};
-      Object.entries(goods).forEach(([good, arr]) => {
-        // Only offers where want.good is Iron
-        let ratios = arr.map(x => x.offer.amount / x.want.amount);
-        if (ratios.length > 0) {
-          avgs[good] = (ratios.reduce((a, b) => a + b, 0) / ratios.length).toFixed(2);
-        }
+      Object.entries(byGood).forEach(([good, arr]) => {
+        avgs[good] = (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(2);
       });
       return avgs;
     }
 
-    // Render average prices at top
+    // Calculate per-nation averages: { [nation]: { [good]: avgPerIron } }
+    function calcNationAverages(offers) {
+      const byNation = {};
+      offers.forEach(({nation, offer, want}) => {
+        if (!byNation[nation]) byNation[nation] = {};
+        if (!byNation[nation][offer.good]) byNation[nation][offer.good] = [];
+        byNation[nation][offer.good].push(offer.amount / want.amount);
+      });
+      // Now, take average per nation per good
+      const nationAvgs = {};
+      Object.entries(byNation).forEach(([nation, goods]) => {
+        nationAvgs[nation] = {};
+        Object.entries(goods).forEach(([good, arr]) => {
+          nationAvgs[nation][good] = (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(2);
+        });
+      });
+      return nationAvgs;
+    }
+
+    // Render global averages
     function renderAverages(avgs) {
       const el = document.getElementById('avg-prices');
       el.innerHTML = Object.entries(avgs).map(
@@ -139,8 +155,8 @@
       ).join('');
     }
 
-    // Render nations (alphabetically), and per-nation offers: "X per 1 Iron"
-    function renderOffersByNation(offers) {
+    // Render per-nation offers, showing "per 1 Iron" for each
+    function renderOffersByNation(offers, nationAverages) {
       // Group by nation
       const nations = {};
       offers.forEach(o => {
@@ -153,23 +169,37 @@
       container.innerHTML = '';
       sortedNationNames.forEach(nation => {
         const nationOffers = nations[nation];
+        // Group by good for this nation (to compute avg per good)
+        const goods = {};
+        nationOffers.forEach(o => {
+          if (!goods[o.offer.good]) goods[o.offer.good] = [];
+          goods[o.offer.good].push(o);
+        });
+        // Build per-good avg for this nation (from precomputed nationAverages)
+        let avgBlock = '';
+        Object.entries(goods).forEach(([good, arr]) => {
+          if (arr.length > 1) {
+            avgBlock += `<span class="nation-good-avg">Avg: ${nationAverages[nation][good]} ${good} per 1 Iron</span><br>`;
+          }
+        });
+        // Offer table
+        const offersRows = nationOffers.map(o => {
+          const perIron = (o.offer.amount / o.want.amount).toFixed(2);
+          return `<tr>
+            <td>${o.offer.good}</td>
+            <td>${o.offer.amount} ${o.offer.good}</td>
+            <td>${o.want.amount} Iron</td>
+            <td>${perIron}</td>
+          </tr>`;
+        }).join('');
         const sec = document.createElement('div');
         sec.className = 'nation-section';
         sec.innerHTML = `<div class="nation-title">${nation}</div>
+          ${avgBlock}
           <table class="offer-table">
             <thead><tr><th>Good</th><th>Offer</th><th>Wants</th><th>Per 1 Iron</th></tr></thead>
             <tbody>
-            ${
-              nationOffers.map(o => {
-                const perIron = (o.offer.amount / o.want.amount).toFixed(2);
-                return `<tr>
-                  <td>${o.offer.good}</td>
-                  <td>${o.offer.amount} ${o.offer.good}</td>
-                  <td>${o.want.amount} Iron</td>
-                  <td>${perIron}</td>
-                </tr>`;
-              }).join('')
-            }
+            ${offersRows}
             </tbody>
           </table>
         `;
@@ -183,12 +213,12 @@
       .then(data => {
         const offersIron = filterIronOnly(data.offers);
 
-        // Collect and average
-        const goods = collectGoods(offersIron);
-        const avgs = calcAverages(goods);
+        // Calculate averages
+        const globalAverages = calcGlobalAverages(offersIron);
+        const nationAverages = calcNationAverages(offersIron);
 
-        renderAverages(avgs);
-        renderOffersByNation(offersIron);
+        renderAverages(globalAverages);
+        renderOffersByNation(offersIron, nationAverages);
       })
       .catch(err => {
         document.getElementById('avg-prices').innerHTML = '<span style="color:#f44">Error loading data.</span>';
