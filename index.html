@@ -148,12 +148,15 @@
     }
 
     // Render global averages
-    function renderAverages(avgs) {
-      const el = document.getElementById('avg-prices');
-      el.innerHTML = Object.entries(avgs).map(
-        ([good, avg]) => `<div class="nation-title">Average</div><br><div class="avg-item"><b>${good}</b><br><span style="color:var(--muted);font-size:0.92em">${avg} per 1 Iron</span></div>`
-      ).join('');
-    }
+function renderAverages(avgs) {
+  const el = document.getElementById('avg-prices');
+  el.innerHTML =
+    `<div class="nation-title" style="text-align:center;">Average</div><br>` +
+    Object.entries(avgs).map(
+      ([good, avg]) => `<div class="avg-item"><b>${good}</b><br><span style="color:var(--muted);font-size:0.92em">${avg} per 1 Iron</span></div>`
+    ).join('');
+}
+
 
     // Render per-nation offers, showing "per 1 Iron" for each
     function renderOffersByNation(offers, nationAverages) {
